@@ -1,10 +1,16 @@
-export const COLUMNS = [
+import {format} from 'date-fns'
 
-  ,
-  { Header: "Email", accessor: "email",Footer: "email"
-  },
-];
 
+// export const COLUMNS = [
+
+//   ,
+//   { Header: "Email", accessor: "email",Footer: "email"
+//   },
+// ];
+
+
+//Cell property control what is rendered on the UI, it is equal to a function
+//
 
 
 export const GROUPED_HEADERS = [
@@ -29,6 +35,9 @@ columns: [
           { Header: "IP Address", accessor: "ip_address",Footer: "IP Address"
           },
           { Header: "Gender", accessor: "gender",Footer: "Gender"
+          },
+          { Header: "DOB", accessor: "date_of_birth",Footer: "DOB",
+            Cell: ({value}) => {return format(new Date(value),'dd/MM/yyy')}
           }
       ]
   },
