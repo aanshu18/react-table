@@ -9,10 +9,10 @@ export const BasicTable = () => {
 const columns = useMemo(() => COLUMNS,[])
 const data  = useMemo(() =>mockdata,[])
 
-const tableInstance =   useTable({
-        columns,
-        data
-}) 
+// const tableInstance =   useTable({
+//         columns,
+//         data
+// }) 
   
 //destructuring properties from table instance.
 //these are basically functions and arrays that the useTable hook 
@@ -22,8 +22,12 @@ const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    footerGroups,
     rows,
-    prepareRow,} = tableInstance
+    prepareRow,} = useTable({
+        columns,
+        data
+}) 
   
     //getTableProps is a fucntion needs to be destructured at table tag, similarily for getTableBodyProps
     //headerGroups is a array 
@@ -53,6 +57,19 @@ const {
                     )
                })} 
             </tbody>
+            <tfoot>
+               {footerGroups.map((footerGroup) => (
+                   <tr {...footerGroup.getFooterGroupProps()}>
+                       {footerGroup.headers.map((column) => (
+                            <td {...column.getFooterProps}>
+                                {
+                                    column.render('Footer')
+                                }
+                            </td>
+                       ))}
+                   </tr>
+               ))}
+            </tfoot>
         </table>
     )
 }
