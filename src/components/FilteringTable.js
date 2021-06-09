@@ -1,9 +1,11 @@
 import React,{useMemo} from 'react'
-import { useTable, useGlobalFilter} from 'react-table'
+import { useTable, useGlobalFilter, useFilters} from 'react-table'
 import mockdata from './mockdata.json'
 import {COLUMNS, GROUPED_HEADERS} from './columns'
 import './table.css'
 import {GlobalFilter} from './GlobalFilter'
+import {ColumnFilter} from './ColumnFilter'
+
 export const FilteringTable = () => {
     
 const columns = useMemo(() => GROUPED_HEADERS,[])
@@ -18,6 +20,7 @@ const data  = useMemo(() =>mockdata,[])
 //these are basically functions and arrays that the useTable hook 
 //given us enable easy table creation
 
+//for global filtering destructure state and setGlobalFilter of table instance
 
 
 const {
@@ -31,7 +34,8 @@ const {
     prepareRow,} = useTable({
         columns,
         data
-}, useGlobalFilter) 
+}, useFilters,
+ useGlobalFilter) 
   
 
 const {globalFilter} = state
@@ -47,7 +51,12 @@ const {globalFilter} = state
                     headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                        {headerGroup.headers.map((column) => (
-                           <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                           <th {...column.getHeaderProps()}>{column.render('Header')}
+                            <div>{
+                                    column.canFilter ? column.render('Filter') : null
+                                    }
+                            </div> 
+                           </th>
                        ))}
                     </tr>
                     ))
