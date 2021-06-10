@@ -17,7 +17,8 @@ import {ColumnFilter} from './ColumnFilter'
 export const GROUPED_HEADERS = [
   { Header: "Id", accessor: "id",
 Footer: "Id",
-Filter: ColumnFilter
+Filter: ColumnFilter,
+disableFilter:true
   },
   { Header: "Name",
 Footer: "Name",

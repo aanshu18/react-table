@@ -1,12 +1,10 @@
 import React,{useMemo} from 'react'
-import { useTable, useGlobalFilter, useFilters} from 'react-table'
+import { useTable, usePagination} from 'react-table'
 import mockdata from './mockdata.json'
 import {COLUMNS, GROUPED_HEADERS} from './columns'
 import './table.css'
-import {GlobalFilter} from './GlobalFilter'
-import {ColumnFilter} from './ColumnFilter'
 
-export const FilteringTable = () => {
+export const PaginationTable = () => {
     
 const columns = useMemo(() => GROUPED_HEADERS,[])
 const data  = useMemo(() =>mockdata,[])
@@ -20,50 +18,49 @@ const data  = useMemo(() =>mockdata,[])
 //these are basically functions and arrays that the useTable hook 
 //given us enable easy table creation
 
-//for global filtering destructure state and setGlobalFilter of table instance
-//column filtering works on the rows that were globally filtered
 
+//for pagination we destructure page instead of rows and use page in jsx in place of rows
+//To go to nextPage and previousPage we need to destructure nextPage and PrevPage functions from table instanec
+
+//we destructe state and pageOptions to for knowing which page we are on in pagination out of total pages
 const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    footerGroups,
-    rows,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
     state,
-    setGlobalFilter,
     prepareRow,} = useTable({
         columns,
         data
-}, useFilters,
- useGlobalFilter) 
+},usePagination) 
   
+//from state we further destructure pageIndex
+const {pageIndex} = state
 
-const {globalFilter} = state
 
     //getTableProps is a fucntion needs to be destructured at table tag, similarily for getTableBodyProps
     //headerGroups is a array 
     return (
         <>
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
         <table {...getTableProps()}>
             <thead>
                 {
                     headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                        {headerGroup.headers.map((column) => (
-                           <th {...column.getHeaderProps()}>{column.render('Header')}
-                            <div>{
-                                    column.canFilter ? column.render('Filter') : null
-                                    }
-                            </div> 
-                           </th>
+                           <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                        ))}
                     </tr>
                     ))
                 }
            </thead>
             <tbody {...getTableBodyProps()}>
-               {rows.map((row) => {
+               {page.map((row) => {
                     prepareRow(row)
                     return (
                         <tr {...row.getRowProps()}>
@@ -75,20 +72,15 @@ const {globalFilter} = state
                     )
                })} 
             </tbody>
-            <tfoot>
-               {footerGroups.map((footerGroup) => (
-                   <tr {...footerGroup.getFooterGroupProps()}>
-                       {footerGroup.headers.map((column) => (
-                            <td {...column.getFooterProps}>
-                                {
-                                    column.render('Footer')
-                                }
-                            </td>
-                       ))}
-                   </tr>
-               ))}
-            </tfoot>
         </table>
-    </>
+        <div>
+            <span>
+                Page{' '}
+                <strong>{pageIndex + 1} of {pageOptions.length}</strong>
+            </span>
+            <button onClick={() => previousPage()} disabled={!canPreviousPage}>Prev</button>
+            <button onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+        </div>
+        </>
     )
 }
