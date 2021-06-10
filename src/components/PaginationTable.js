@@ -26,6 +26,9 @@ const data  = useMemo(() =>mockdata,[])
 
 //for jumping on any specific page we destructure 2 more functions from table instance which is gotoPage and pageCount
 
+//if we want to alter the page size the we destructure setPageSize from table instance and from state we destructure pageSize
+//by default the pagesize is 10
+
 const {
     getTableProps,
     getTableBodyProps,
@@ -39,14 +42,15 @@ const {
     state,
     gotoPage,
     pageCount,
+    setPageSize,
     prepareRow,} = useTable({
         columns,
-        data,
+        data
         //initialState: { pageIndex : 2}
 },usePagination) 
   
 //from state we further destructure pageIndex
-const {pageIndex} = state
+const {pageIndex, pageSize} = state
 
 
     //getTableProps is a fucntion needs to be destructured at table tag, similarily for getTableBodyProps
@@ -92,8 +96,16 @@ const {pageIndex} = state
                         style={{ width: '50px'}}
                         /> 
             </span>
-            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
 
+            <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))} >
+                {[10,20,30].map((pageSize) => (
+                    <option key={pageSize} value={pageSize}>
+                        Show {pageSize}
+                        </option>
+                    ))}
+            </select>
+
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
             <button onClick={() => previousPage()} disabled={!canPreviousPage}>Prev</button>
             <button onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
             <button onClick={() => gotoPage(pageOptions.length-1)} disabled={!canNextPage}>{'>>'}</button>
