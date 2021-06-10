@@ -23,6 +23,9 @@ const data  = useMemo(() =>mockdata,[])
 //To go to nextPage and previousPage we need to destructure nextPage and PrevPage functions from table instanec
 
 //we destructe state and pageOptions to for knowing which page we are on in pagination out of total pages
+
+//for jumping on any specific page we destructure 2 more functions from table instance which is gotoPage and pageCount
+
 const {
     getTableProps,
     getTableBodyProps,
@@ -34,9 +37,12 @@ const {
     canPreviousPage,
     pageOptions,
     state,
+    gotoPage,
+    pageCount,
     prepareRow,} = useTable({
         columns,
-        data
+        data,
+        //initialState: { pageIndex : 2}
 },usePagination) 
   
 //from state we further destructure pageIndex
@@ -78,8 +84,20 @@ const {pageIndex} = state
                 Page{' '}
                 <strong>{pageIndex + 1} of {pageOptions.length}</strong>
             </span>
+            <span>
+                | Go to page: {' '}
+                <input type="number" defaultValue = {pageIndex+1} onChange={(e) => {
+                        const pageNumber = e.target.value ? Number(e.target.value) - 1 : 0
+                        gotoPage(pageNumber) }} 
+                        style={{ width: '50px'}}
+                        /> 
+            </span>
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
+
             <button onClick={() => previousPage()} disabled={!canPreviousPage}>Prev</button>
             <button onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+            <button onClick={() => gotoPage(pageOptions.length-1)} disabled={!canNextPage}>{'>>'}</button>
+
         </div>
         </>
     )
