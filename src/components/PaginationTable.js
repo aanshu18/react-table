@@ -25,7 +25,7 @@ const data  = useMemo(() =>mockdata,[])
 //we destructe state and pageOptions to for knowing which page we are on in pagination out of total pages
 
 //for jumping on any specific page we destructure 2 more functions from table instance which is gotoPage and pageCount
-
+//initialState: { pageSize: 5} for setting custom page size in react table
 const {
     getTableProps,
     getTableBodyProps,
@@ -42,7 +42,7 @@ const {
     prepareRow,} = useTable({
         columns,
         data,
-        //initialState: { pageIndex : 2}
+        //initialState: { pageIndex : 2,pageSize: 5}
 },usePagination) 
   
 //from state we further destructure pageIndex
