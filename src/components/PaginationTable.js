@@ -29,6 +29,7 @@ const data  = useMemo(() =>mockdata,[])
 //if we want to alter the page size the we destructure setPageSize from table instance and from state we destructure pageSize
 //by default the pagesize is 10
 
+//initialState: { pageSize: 5} for setting custom page size in react table
 const {
     getTableProps,
     getTableBodyProps,
@@ -45,8 +46,8 @@ const {
     setPageSize,
     prepareRow,} = useTable({
         columns,
-        data
-        //initialState: { pageIndex : 2}
+        data,
+        //initialState: { pageIndex : 2,pageSize: 5}
 },usePagination) 
   
 //from state we further destructure pageIndex
